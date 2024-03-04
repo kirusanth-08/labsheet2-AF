@@ -1,0 +1,11 @@
+{
+  "name": "labsheet2-af",
+  "version": "1.0.0",
+  "description": "An app created for learn node js",
+  "main": "app.js",
+  "scripts": {
+    "test": "npm start"
+  },
+  "author": "",
+  "license": "ISC"
+}
