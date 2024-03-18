@@ -3,8 +3,7 @@ const mongoose = require('mongoose');
 const courseSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: true,
-    enum: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+    required: true
   },
   code: {
     type: String,
@@ -20,6 +19,4 @@ const courseSchema = new mongoose.Schema({
   }
 });
 
-const timetable = mongoose.model('Timetable', timetableSchema);
-
-module.exports = timetable;
+module.exports = mongoose.model('Course', courseSchema);

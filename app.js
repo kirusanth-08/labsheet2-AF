@@ -1,76 +1,47 @@
-const express = require('express')
-const jwt = require('jsonwebtoken');
-const expressJwt = require('express-jwt');
+const express = require('express');
+const mongoose = require('mongoose');
 const dotenv = require('dotenv');
+const bodyParser = require('body-parser');
+const authMiddleware = require('./middleware/authMiddleware');
 
-const app = express()
+// Import routes
+const userRoutes = require('./routes/userRoutes');
+const courseRoutes = require('./routes/courseRoutes');
+const timetableRoutes = require('./routes/timetableRoutes');
 
-app.use(express.json())
+// Load environment variables from .env file
+dotenv.config();
 
-const port = process.env.PORT || 3000
-
-let posts = [
-    {
-        id: 1,
-        title: '1st post',
-        content: 'This is my first post'
-    },
-    {
-        id: 2,
-        title: 'Second post',
-        content: 'This is my second post!'
-    }
-]
-
-
-app.use((req, res, next) => {
-    console.log(`Request Url: ${req.url}`);
-    next();
+// Connect to MongoDB
+mongoose.connect(process.env.MONGODB_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+}).then(() => {
+    console.log('MongoDB connected');
+}).catch(err => {
+    console.error('MongoDB connection error:', err);
+    process.exit(1); // Exit the process if MongoDB connection fails
 });
 
-app.use((req, res, next) => {
-    console.log(`Request Type: ${req.method}`);
-    next();
+const app = express();
+
+app.use(bodyParser.json());
+
+// Use imported routes
+app.use(userRoutes);
+app.use(courseRoutes);
+app.use(timetableRoutes);
+
+
+// Protected route that requires authentication
+// Use the verifyToken middleware from authMiddleware
+app.get('/protected', authMiddleware, (req, res) => {
+    // Access user information from req.user
+    res.json({ message: 'Authenticated user', user: req.user });
 });
 
+const PORT = process.env.PORT || 3000;
 
-app.get('/posts/', (req, res) => {
-        res.send(posts)
-    }
-)
-
-app.get('/posts/:id', (req, res) => {
-        const id = req.params.id
-        const post = posts.find(post => post.id == id)
-        res.send(post)
-    }
-)
-
-app.post('/posts/', (req, res) => {
-        const post = req.body
-        posts.push(post)
-        res.send(post)
-    }
-)
-
-app.put('/posts/:id', (req, res) => {
-        const id = req.params.id
-        const newPost = req.body
-        const post = posts.find(post => post.id == id)
-        post.title = newPost.title
-        post.content = newPost.content
-        res.send(post)
-    }
-)
-
-app.delete('/posts/:id', (req, res) => {
-        const id = req.params.id
-        posts = posts.filter(post => post.id != id)
-        res.send(posts)
-    }
-)
-
-app.listen(port, () => {
-    console.log(`App listening at http://localhost:${port}`)
-    }
-)
+app.listen(PORT, () => {
+    console.log(`App listening at http://localhost:${PORT}`);
+});
