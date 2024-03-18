@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const timetableController = require("../controllers/timetableController");
+const timetableController = require("../controllers/timeTableController");
 
 // Create a new timetable entry
 router.post("/api/timetable", timetableController.createEntry);

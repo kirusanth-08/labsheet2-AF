@@ -1,3 +1,3 @@
 # labsheet2-AF
 
-Learning NodeJs
+Seperate Folders, files created for Models, Controllers, Routes, Middleware, configuration file(.env)

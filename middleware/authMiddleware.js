@@ -1,7 +1,6 @@
 const jwt = require('jsonwebtoken');
+require('dotenv').config();
 
-// Sample secret key (not recommended for production)
-const secretKey = 'mysecretkey';
 
 // Middleware function for token verification
 const verifyToken = (req, res, next) => {
